@@ -1,6 +1,0 @@
-	
-
-	-	bct_table.pdf
-	-	threshold_absolute.m
-	-	threshold_proportional.m
-	-	weight_conversion.m

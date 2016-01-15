@@ -1,8 +1,0 @@
-	
-
-	-	degrees_dir.m
-	-	degrees_und.m
-	-	jdegree.m
-	-	strengths_dir.m
-	-	strengths_und.m
-	-	strengths_und_sign.m
