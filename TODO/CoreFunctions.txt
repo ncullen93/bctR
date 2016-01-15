@@ -1,0 +1,11 @@
+	
+
+	-	assortativity_bin.m
+	-	assortativity_wei.m
+	-	kcore_bd.m
+	-	kcore_bu.m
+	-	rich_club_bd.m
+	-	rich_club_bu.m
+	-	rich_club_wd.m
+	-	rich_club_wu.m
+	-	score_wu.m
