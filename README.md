@@ -5,4 +5,6 @@ This is an effort to import the Brain Connectivity Toolbox to the R programming 
 
 The code is mostly in pure R, but I am planning to implement a few functions in C++ (w/ Rcpp) which would never need to be modified - e.g. breadth-first search.
 
+Additionally, I am planning to use parallel processing wherever possible so that performance will be quite fast - especially when run on a high-performance computing cluster.
+
 Expected Date of Completion: March 1, 2016.
