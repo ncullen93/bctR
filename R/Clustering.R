@@ -80,8 +80,10 @@ consensus.und <- function(D,
 #' 
 #' In the Python-BCT, networkx is used to do the computation efficiently.
 #' In the Matlab-BCT, the Dulmage-Mendelsohn decomposition is computed.
+#' Here, we use the union-find algorithm
 #' 
 #' Note: Python version takes 1.8s w/out networkx and 54ms w/ networkx w/ sample.data
+#' This R version clocks in at 20ms! 
 #' 
 #' @param A : a matrix - binary undirected adjacency matrix
 #' 
@@ -95,11 +97,23 @@ get.components <- function(A){
   n <- nrow(A)
   diag(A) <- 0
   
-  cptvec <- rep(0,n)
-  R <- breadthdist(A)[['R']]
-  # for
+  comps <- lapply(1:n,function(x) c(x))  # each node starts as its own component
+  
+  for (u in 1:n){
+    nbrs <- which(as.vector(A[u,])>0)
+    for (v in nbrs){
+      idx1 <- Position(function(x) u %in% x, comps, nomatch=0) # findset(u)
+      idx2 <- Position(function(x) v %in% x, comps, nomatch=0) # findset(v)
+      if (idx1 != idx2){
+        # union(u,v)
+        comps[[min(idx1,idx2)]] <- union(comps[[idx1]],comps[[idx2]])
+        comps[[max(idx1,idx2)]] <- NULL
+      }
+    }
+  } 
+  
+  return(list(comps,sapply(comps,length)))
 }
-
 
 
 

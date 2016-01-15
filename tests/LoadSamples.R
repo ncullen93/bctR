@@ -16,7 +16,11 @@ load.signed.sample <- function(thres=1){
                8))
 }
 
-load.sparse.sample <- function(thres){}
+load.sparse.sample <- function(thres=0.02){
+  return(threshold.proportional(get(load(file.path(TEST.DATA.DIR,
+                                                   'sample.data.Rdata'))),
+                                thres))
+}
 
 load.binary.sample <- function(thres){}
 
