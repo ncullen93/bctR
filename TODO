@@ -1,0 +1,16 @@
+
+
+1. Import .mat data files into .Rdata data files   -> Complete 1/14/16
+2. Develop File Structure -> Complete 1/14/16
+3. Import test .mat data files into test .Rdata data file -> Complete 1/14/16
+4. Code all miscellaneous/testing functions -> good
+
+- snow package
+- rcpp package
+
+Concrete Goals:
+- implement bfs in Rcpp
+- implement get.components function
+- decide on a parallel package (probably snow)
+- parallelize all existing code
+- document my overall views/goals on parallel processing in this package

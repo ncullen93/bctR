@@ -1,5 +1,20 @@
 context("Clustering")
 
+# Expectations - https://tgmstat.wordpress.com/2013/06/26/devtools-and-testthat-r-packages/
+#
+# expect_true(x)	checks that an expression is true.
+# expect_false(x)	checks that an expression is false.
+# expect_is(x, y)	checks that an object inherit()s from a specified class
+# expect_equal(x, y)	check for equality with numerical tolerance
+# expect_equivalent(x, y)	a more relaxed version of equals() that ignores attributes
+# expect_identical(x, y)	check for exact equality
+# expect_matches(x, y)	matches a character vector against a regular expression.
+# expect_output(x, y)	matches the printed output from an expression against a regular expression
+# expect_message(x, y)	checks that an expression shows a message
+# expect_warning(x, y)	expects that you get a warning
+# expect_error(x, y)	verifies that the expression throws an error.
+
+
 #' Test 'clustering.coef.wu'
 #' 
 #' TESTS:
