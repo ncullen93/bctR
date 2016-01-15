@@ -9,4 +9,6 @@ Additionally, I am planning to use parallel processing wherever possible so that
 
 My code is heavily based right now off the python version: https://github.com/aestrivex/bctpy
 
+For testing, I'm using the "testthat" package.
+
 Expected Date of Completion: March 1, 2016.

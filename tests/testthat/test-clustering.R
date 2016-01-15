@@ -1,3 +1,4 @@
+context("Clustering")
 
 #' Test 'clustering.coef.wu'
 #' 
