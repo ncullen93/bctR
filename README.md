@@ -7,4 +7,6 @@ The code is mostly in pure R, but I am planning to implement a few functions in 
 
 Additionally, I am planning to use parallel processing wherever possible so that performance will be quite fast - especially when run on a high-performance computing cluster.
 
+My code is heavily based right now off the python version: https://github.com/aestrivex/bctpy
+
 Expected Date of Completion: March 1, 2016.
