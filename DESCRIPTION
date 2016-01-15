@@ -6,7 +6,7 @@ Date: 2016-01-14
 Author: N.C. Cullen
 Maintainer: N.C. Cullen <ncullen.th@dartmouth.edu>
 Description: Complex Network Analysis for Neuroscience
-Depends: igraph
-Suggests: Matrix
+Depends: parallel, snow
+Suggests: Matrix, hash
 VignetteBuilder: knitr
 License: GPL (>=2)

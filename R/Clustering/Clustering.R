@@ -12,7 +12,7 @@
 #' 
 clustering.coef.wu <- function(W){
   W <- Matrix::Matrix(W) # convert to fast matrix
-  K <- apply(W,2,function(row) sum(row>0))
+  K <- colSums(W>0)
   ws <- W**(1/3)
   cyc3 <- diag(ws %*% (ws %*% ws)) # quite slow
   K[which(cyc3 == 0)] <- Inf
@@ -114,15 +114,12 @@ get.components <- function(A){
 #' 
 transitivity.wu <- function(W){
   W <- Matrix::Matrix(W)
-  K <- apply(W,2,function(row) sum(row>0))
+  K <- colSums(W>0)
   ws <- W**(1/3)
   cyc3 <- diag(ws %*% (ws %*% ws))
   t <- sum(cyc3) / sum(K * (K-1))
   return(t)
 }
-
-
-
 
 
 

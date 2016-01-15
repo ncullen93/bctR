@@ -27,7 +27,7 @@ threshold.proportional <- function(W,
   if (isSymmetric(W)) {
     s.flag <- T
     ud <- 2
-    W[lower.tri(W)] <- 0.0
+    W[lower.tri(W)] <- 0
   }
   
   I <- order(abs(W),decreasing=T) # sort indices by value magnitude

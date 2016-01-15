@@ -1,4 +1,5 @@
 # Distance Code
+# Uses "hash" package for fast(ish) BFS, etc.
 
 #' Binary Reachibility Matrix
 #' 
@@ -70,7 +71,7 @@ breadth <- function(CIJ, src){
         branch[v] <- u
         queue <- c(v,queue)
       }
-      queue <- queue[2:]
+      queue <- queue[-1]
       color[u] <- black
     }
   }
