@@ -1,4 +1,5 @@
-# Clustering Code
+
+# Code for Clustering functions
 # Uses "Matrix" package for fast matrix operations - similar to using numpy/scipy.
 
 #' Weighted Undirected Clustering Coefficient
@@ -58,6 +59,30 @@ consensus.und <- function(D,
                           tau,
                           reps=1000){
   
+  n <- nrow(D)
+  flag <- T
+  while (flag){
+    flag <- F
+    dt <- D * (D >= tau) # not sure if matrix multiplication or filtering?
+    diag(dt) <- 0
+    
+    if (sum(dt==0)==0){
+      ciu <- 1:n
+    }
+    else{
+      cis <- Matrix::Matrix(0, nrow=n, ncol=reps)
+      for (i in 1:reps){
+        cis[,i] <- modularity.louvain.und.sign(dt)
+      }
+      ciu <- unique.partitions(cis)
+      nu <- ncol(ciu)
+      if (nu > 1){
+        flag <- T
+        D <- agreement(cis) / reps
+      }
+    }
+  }
+  return() # np.squeeze(ciu+1) ??
 }
 
 
@@ -134,8 +159,5 @@ transitivity.wu <- function(W){
   t <- sum(cyc3) / sum(K * (K-1))
   return(t)
 }
-
-
-
 
 

@@ -1,24 +1,20 @@
 
-# Obviously need to change this... but what is the best way?
-TEST.DATA.DIR <- '/users/nick/desktop/bctR/tests/test_data/'
+# Code for loading sample data
 
 
 load.sample <- function(thres=1){
-  return(threshold.proportional(get(load(file.path(TEST.DATA.DIR,
-                                                   'sample.data.Rdata'))),
+  return(threshold.proportional(get(load(sample.data)),
                                 thres))
 }
 
 load.signed.sample <- function(thres=1){
-  return(round(threshold.proportional(get(load(file.path(TEST.DATA.DIR,
-                                                         'sample.signed.Rdata'))),
+  return(round(threshold.proportional(get(load(sample.signed.data)),
                                       thres),
                8))
 }
 
 load.sparse.sample <- function(thres=0.02){
-  return(threshold.proportional(get(load(file.path(TEST.DATA.DIR,
-                                                   'sample.data.Rdata'))),
+  return(threshold.proportional(get(load(sample.data)),
                                 thres))
 }
 

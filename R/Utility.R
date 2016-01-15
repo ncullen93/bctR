@@ -1,4 +1,6 @@
 
+# Code for Utility functions
+
 #' Threshold Proportional
 #' 
 #' This function "thresholds" the connectivity matrix by preserving a

@@ -1,5 +1,5 @@
-# Distance Code
-# Uses "hash" package for fast(ish) BFS, etc.
+
+# Code for Distance functions
 
 #' Binary Reachibility Matrix
 #' 
