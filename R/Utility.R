@@ -1,6 +1,10 @@
 
 # Code for Utility functions
 
+sourcecpp <- function(){
+  sourceCpp('/users/nick/desktop/bctR/src/cppUtility.cpp')
+}
+
 #' Threshold Proportional
 #' 
 #' This function "thresholds" the connectivity matrix by preserving a
