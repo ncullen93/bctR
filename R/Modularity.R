@@ -110,7 +110,7 @@ modularity.louvain.und.sign <- function(W,
     m <- vapply(m,function(y) which(levels(m)==y),numeric(1)) # new module assignments
     h <- h + 1
     
-    ci[[h]] <- vapply(ci[[h-1]], function(x) m[x],numeric(1))[1:n]
+    ci[[h]] <- m[ci[[h-1]]][1:n]
     
     nh <- max(m) # number of new nodes
     wn0 <- matrix(nrow=nh, ncol=nh) # new positive weights matrix
@@ -229,7 +229,7 @@ modularity.louvain.und <- function(W,
     m <- vapply(m,function(y) which(levels(m)==y),1) # new module assignments
     h <- h + 1
     
-    ci[[h]] <- vapply(ci[[h-1]], function(x) m[x],numeric(1))[1:n]
+    ci[[h]] <- m[ci[[h-1]]][1:n]
     
     n <- max(m) # new number of modules
     W1 <- matrix(nrow=n,ncol=n) # new weighted matrix
