@@ -33,7 +33,7 @@
 #' a vector (refined community affiliation network), and element
 #' two is 'Q', a float (optimized modularity metric)
 #' 
-modularity.louvain.und.sign <- function(W,
+UNC.modularity.louvain.und.sign <- function(W,
                                         gamma=1,
                                         qtype='sta',
                                         seed=NA){
@@ -141,6 +141,9 @@ modularity.louvain.und.sign <- function(W,
   }
   return(list(ci.ret=ci.ret,q[length(q)]))
 }
+modularity.louvain.und.sign <- compiler::cmpfun(UNC.modularity.louvain.und.sign)
+
+
 
 #' Louvain Modularity Algorithm on Undirected Graph
 #' 
@@ -178,7 +181,7 @@ modularity.louvain.und.sign <- function(W,
 #' two is 'Q', a float (optimized modularity metric).If hierarchical 
 #' output enabled, becomes an Hx1 array of floats instead.
 #' 
-modularity.louvain.und <- compiler::cmpfun(UNC.modularity.louvain.und)
+
 UNC.modularity.louvain.und <- function(W,
                                   gamma=1,
                                   hierarchy=FALSE,
@@ -210,15 +213,15 @@ UNC.modularity.louvain.und <- function(W,
       stopifnot(it < 1000) # infinite loop
       
       flag <- FALSE
+      
       for (i in sample(n)){
         ma <- m[i] # module assignment
         # algorithm condition
         dQ <- ((Knm[i,] - Knm[i,ma] + W[i,i]) -
                  gamma * k[i] * (Km - Km[ma] + k[i]) / s)
-        
         dQ[ma] <- 0 # change to itself is 0
         max.dQ <- max(dQ) # find maximum modularity increase
-        
+                              
         if (max.dQ > 1e-10){
           j <- which.max(dQ)
           
@@ -266,9 +269,7 @@ UNC.modularity.louvain.und <- function(W,
   }
   return(ciq)
 }
-
-
-
+modularity.louvain.und <- compiler::cmpfun(UNC.modularity.louvain.und)
 
 
 

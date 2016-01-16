@@ -15,6 +15,7 @@ load.signed.sample <- function(thres=1){
 }
 
 load.sparse.sample <- function(thres=0.02){
+  sample.data <- '/users/nick/desktop/bctr/data/sample.data.Rdata'
   return(threshold.proportional(get(load(sample.data)),
                                 thres))
 }

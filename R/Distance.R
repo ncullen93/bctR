@@ -42,41 +42,7 @@ breadthdist <- function(CIJ){
 #' and 'branch' is a vector of vertices that precede 'i' in the BFS (-1 for src)
 #' 
 breadth <- function(CIJ, src){
-  n <- nrow(CIJ)
-  #colors: white, gray, black
-  white <- 0
-  gray <- 1
-  black <- 2
-  
-  color <- rep(0,n)
-  distance <- rep(Inf,n)
-  branch <- rep(0,n)
-  
-  #start on vertex source
-  color[src] <- gray
-  distance[src] <- 0
-  branch[src] <- -1
-  queue <- c(src)
-  
-  while (!sets::set_is_empty(queue)){
-    u <- queue[0]
-    neighbors <- which(CIJ[u,]>0) # neighbors
-    for (v in neighbors){
-      if (distance[v] == 0){
-        distance[v] <- distance[u] + 1
-      }
-      if (color[v] == white){
-        color[v] <- gray
-        distance[v] <- distance[u] + 1
-        branch[v] <- u
-        queue <- c(v,queue)
-      }
-      queue <- queue[-1]
-      color[u] <- black
-    }
-  }
-  return(list(distance=distance,
-              branch=branch))
+  return()
 }
 
 

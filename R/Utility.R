@@ -15,7 +15,7 @@
 #' 
 #' @return W : Threshold Connectivity Matrix
 #' 
-threshold.proportional <- function(W, 
+UNC.threshold.proportional <- function(W, 
                                    p, 
                                    copy=F){
   stopifnot(p > 0, p <= 1)
@@ -40,7 +40,7 @@ threshold.proportional <- function(W,
   
   return(W)
 }
-
+threshold.proportional <- compiler::cmpfun(UNC.threshold.proportional)
 
 #' Threshold Absolute
 #' 
@@ -54,14 +54,14 @@ threshold.proportional <- function(W,
 #' 
 #' @return W : Threshold Connectivity Matrix
 #' 
-threshold.absolute <- function(W,
+UNC.threshold.absolute <- function(W,
                                thr,
                                copy=F){
   diag(W) <- 0 # clear the diagonal, modifies in place
   W[W < thr] <- 0
   return(W)
 }
-
+threshold.absolute <- compiler::cmpfun(UNC.threshold.absolute)
 
 #' Weight Conversion
 #' 

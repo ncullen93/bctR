@@ -11,8 +11,7 @@
 #' 
 #' @return C : a vector - clustering coefficient vector
 #' 
-clustering.coef.wu <- function(W){
-  W <- Matrix::Matrix(W) # convert to fast matrix
+UNC.clustering.coef.wu <- function(W){
   K <- colSums(W>0)
   ws <- W**(1/3)
   cyc3 <- diag(ws %*% (ws %*% ws)) # quite slow
@@ -20,7 +19,7 @@ clustering.coef.wu <- function(W){
   C <- cyc3 / (K * (K-1))
   return(C)
 }
-
+clustering.coef.wu <- compiler::cmpfun(UNC.clustering.coef.wu)
 
 #' Consensus of a Graph
 #' 
@@ -55,7 +54,7 @@ clustering.coef.wu <- function(W){
 #' 
 #' @return ciu : a vector - the consensus partition
 #' 
-consensus.und <- function(D,
+UNC.consensus.und <- function(D,
                           tau,
                           reps=1000){
   
@@ -84,7 +83,7 @@ consensus.und <- function(D,
   }
   return() # np.squeeze(ciu+1) ??
 }
-
+consensus.und <- compiler::cmpfun(UNC.consensus.und)
 
 
 #' Connected Components of an Undirected Graph
@@ -116,8 +115,7 @@ consensus.und <- function(D,
 #' each component has two elements: 'members' - the vector of nodes belonging
 #' to that component, and 'size' - the number of nodes in that component
 #' 
-#' 
-get.components <- function(A){
+UNC.get.components <- function(A){
   A <- binarize(A)
   n <- nrow(A)
   diag(A) <- 0
@@ -139,7 +137,7 @@ get.components <- function(A){
   
   return(list(comps,sapply(comps,length)))
 }
-
+get.components <- compiler::cmpfun(UNC.get.components)
 
 
 #' Weighted Undirected Transitivity
@@ -151,7 +149,7 @@ get.components <- function(A){
 #' 
 #' @return t : an integer - transitivity scalar
 #' 
-transitivity.wu <- function(W){
+UNC.transitivity.wu <- function(W){
   W <- Matrix::Matrix(W)
   K <- colSums(W>0)
   ws <- W**(1/3)
@@ -159,5 +157,5 @@ transitivity.wu <- function(W){
   t <- sum(cyc3) / sum(K * (K-1))
   return(t)
 }
-
+transitivity.wu <- compiler::cmpfun(UNC.transitivity.wu)
 
