@@ -159,6 +159,11 @@ modularity.louvain.und.sign <- function(W,
 #' expr      min       lq     mean   median       uq      max neval
 #' fun    8.890078 11.65477 12.90705 12.62741 13.85725 19.57911   100
 #' 
+#' WITH compile::cmpfun() - Fast!
+#' Unit: milliseconds
+#' expr      min       lq     mean   median       uq      max neval
+#' fun    6.015344 7.543102 9.385713 9.529057 10.69335 13.49019   100
+#' 
 #' Note: Function is not validated yet.
 #' 
 #' @param W : a Matrix - undirected weighted/binary connection matrix
@@ -173,7 +178,8 @@ modularity.louvain.und.sign <- function(W,
 #' two is 'Q', a float (optimized modularity metric).If hierarchical 
 #' output enabled, becomes an Hx1 array of floats instead.
 #' 
-modularity.louvain.und <- function(W,
+modularity.louvain.und <- compiler::cmpfun(UNC.modularity.louvain.und)
+UNC.modularity.louvain.und <- function(W,
                                   gamma=1,
                                   hierarchy=FALSE,
                                   seed=NA){
