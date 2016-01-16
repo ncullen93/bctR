@@ -55,12 +55,15 @@ modularity.louvain.und.sign <- function(W,
   d0 <- d[[1]]
   d1 <- d[[2]]
   
-  h <- 1 # hierarchy index
+  h <- 2 # hierarchy index
   nh <- n # number of nodes in hierarcy
   ci <- list(1:n) # hierarchical module assignments
-  q <- c(-1,0) # hierarchical modularity values
+  #q <- c(-1,0) # hierarchical modularity values
   q <- numeric(100)
+  q[1:2] <- c(-1,0)
+  
   while ( (q[h] - q[h-1]) > 1e-10 ){
+    
     stopifnot(h < 300) # Modularity Infinite Loop Style A ??
     kn0 <- colSums(W0)
     kn1 <- colSums(W1)
@@ -81,9 +84,9 @@ modularity.louvain.und.sign <- function(W,
       for (u in sample(nh)){
         ma <- m[u]
         dQ0 <- ((knm0[u:length(knm0)] + W0[u,u] - knm0[u,ma]) - 
-                  gamma * kn0[u] * (km0 + kn0[u] - km0[mal]) / s0) # positive dQ
+                  gamma * kn0[u] * (km0 + kn0[u] - km0[ma]) / s0) # positive dQ
         dQ1 <- ((knm1[u,length(knm1)] + W1[u,u] - knm1[u,ma]) -
-                  gamma * kn1[u] * (km1 + kn1[u] - km1[mal]) / s1) # negative dQ
+                  gamma * kn1[u] * (km1 + kn1[u] - km1[ma]) / s1) # negative dQ
         dQ <- d0 * dQ0 - d1 * dQ1 # rescaled changes in modularity
         dQ[ma] <- 0 # no changes for same module
         
@@ -109,7 +112,6 @@ modularity.louvain.und.sign <- function(W,
     m <- as.factor(m)
     m <- vapply(m,function(y) which(levels(m)==y),numeric(1)) # new module assignments
     h <- h + 1
-    
     ci[[h]] <- m[ci[[h-1]]][1:n]
     
     nh <- max(m) # number of new nodes
@@ -137,7 +139,7 @@ modularity.louvain.und.sign <- function(W,
     
     ci.ret <- vapply(ci[[length(ci)]],function(y) which(levels(as.factor(m))==y),numeric(1))
   }
-  return(list(ci.ret,q[length(q)]))
+  return(list(ci.ret=ci.ret,q[length(q)]))
 }
 
 #' Louvain Modularity Algorithm on Undirected Graph
@@ -154,8 +156,8 @@ modularity.louvain.und.sign <- function(W,
 #' 
 #' R Microbenchmark - Fast enough..
 #' Unit: milliseconds
-#' expr     min       lq    mean   median       uq      max neval
-#'  F     17.1479 18.74915 23.5213 21.61944 24.92701 175.7068   100
+#' expr      min       lq     mean   median       uq      max neval
+#' fun    8.890078 11.65477 12.90705 12.62741 13.85725 19.57911   100
 #' 
 #' Note: Function is not validated yet.
 #' 
@@ -225,10 +227,9 @@ modularity.louvain.und <- function(W,
         }
       }
     }
-    m <- as.factor(m)
-    m <- vapply(m,function(y) which(levels(m)==y),1) # new module assignments
-    h <- h + 1
     
+    m <- as.numeric(as.factor(m))
+    h <- h + 1
     ci[[h]] <- m[ci[[h-1]]][1:n]
     
     n <- max(m) # new number of modules
