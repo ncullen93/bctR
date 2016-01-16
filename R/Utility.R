@@ -1,7 +1,7 @@
 
 # Code for Utility functions
 
-# Dont need this eventually
+# Dont need this eventually..
 sourcecpp <- function(){
   sourceCpp('/users/nick/desktop/bctR/src/cppUtility.cpp')
 }
