@@ -141,6 +141,78 @@ modularity.louvain.und.sign <- function(W,
 }
 
 
+modularity.louvain.und <- function(W,
+                                  gamma=1,
+                                  hierarchy=FALSE,
+                                  seed=NA){
+  if (!is.na(seed)) set.seed(seed)
+  
+  n <- nrow(W) # number of nodes
+  s <- sum(W) # total edge weight
+  h <- 0 # hierarchy index
+  ci <- list(1:n) # hierarchical module assignments
+  q <- c(-1) # hierarhcical modularity values
+  n0 <- n
+  
+  while (TRUE){
+    stopifnot(h < 300) # infinite loop
+    
+    k <- rowSums(W) # node degree
+    Km <- k # module degree
+    Knm <- W # node-to-module degree
+    
+    m <- 1:n # initial module assignments
+    flag <- TRUE
+    it <- 0
+    while (flag){
+      it <- it + 1
+      stopifnot(it < 1000) # infinite loop
+      
+      flag <- FALSE
+      
+      for (u in sample(n)){
+        ma <- m[i] # module assignment
+        # algorithm condition
+        dQ <- ((Knm[i,] - Knm[i,ma] + W[i,i]) -
+                 gamma * k[i] * (Km - Km[ma] + k[i]) / s)
+        dQ[ma] <- 0 # change to itself is 0
+        max.dQ <- max(dQ) # find maximum modularity increase
+        
+        if (max.dQ > 1e-10){
+          j <- which(dQ==max.dQ)
+          
+          Knm[,j] <- Knm[,j] + W[,i] # change node-to-module degrees
+          Knm[,ma] <- Knm[,ma] - W[,i]
+          
+          Km[j] <- Km[j] + k[i] # change module degrees
+          Km[ma] <- Km[ma] - k[i]
+          
+          m[i] <- j # reassign module
+          flag <- TRUE
+        }
+      }
+    }
+    
+    m <- sapply(m,function(y) which(levels(as.factor(m))==y)) # new module assignments
+    h <- h +1
+    for (i in 1:n){
+      ci[[h]][which(ci[[h-1]] == i)] <- m[i]
+    }
+    stopifnot(!is.na(sum(ci[[h]])))
+    n <- max(m) # new number of modules
+    W1 <- Matrix(0,nrow=n,ncol=n) # new weighted matrix
+    
+    
+  }
+  
+  
+}
+
+
+
+
+
+
 
 
 
