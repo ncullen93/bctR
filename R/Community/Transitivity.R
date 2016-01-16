@@ -22,7 +22,7 @@
 #' @return T : a float - transitivity scalar
 #' 
 #' NOT TESTED
-UNC.transitivity.bd <- function(A){
+transitivity.bd <- function(A){
   S <- A + t(A) # symmetrized input graph
   K <- colSums(S)
   cyc3 <- diag(ws %*% (ws %*% ws)) / 2
@@ -31,7 +31,7 @@ UNC.transitivity.bd <- function(A){
   C <- sum(cyc3) / sum(CYC3)
   return(C)
 }
-transitivity.bd <- compiler::cmpfun(UNC.transitivity.bd)
+transitivity.bd <- compiler::cmpfun(transitivity.bd)
 
 
 
@@ -45,13 +45,13 @@ transitivity.bd <- compiler::cmpfun(UNC.transitivity.bd)
 #' @return T : a float - transitivity scalar
 #' 
 #' NOT TESTED
-UNC.transitivity.bu <- function(A){
+transitivity.bu <- function(A){
   tri3 <- trace(A %*% (A %*% A))
   tri2 <- sum( (A %*% A) - trace( A %*% A ) )
   C <- tri3 / tri2
   return(C)
 }
-transitivity.bu <- compiler::cmpfun(UNC.transitivity.bu)
+transitivity.bu <- compiler::cmpfun(transitivity.bu)
 
 
 
@@ -73,7 +73,7 @@ transitivity.bu <- compiler::cmpfun(UNC.transitivity.bu)
 #' @return T : a float - transitivity scalar
 #' 
 #' NOT TESTED
-UNC.transitivity.wd <- function(W){
+transitivity.wd <- function(W){
   A <- binarize(W)
   S <- W**(1/3) + t(W)**(1/3)
   K <- colSums(A + t(A))
@@ -83,7 +83,7 @@ UNC.transitivity.wd <- function(W){
   C <- sum(cyc3) / sum(CYC3)
   return(C)
 }
-transitivty.wd <- compiler::cmpfun(UNC.transitivity.wd)
+transitivty.wd <- compiler::cmpfun(transitivity.wd)
 
 
 
@@ -97,7 +97,7 @@ transitivty.wd <- compiler::cmpfun(UNC.transitivity.wd)
 #' @return t : an integer - transitivity scalar
 #' 
 #' NOT TESTED
-UNC.transitivity.wu <- function(W){
+transitivity.wu <- function(W){
   #W <- Matrix::Matrix(W)
   K <- colSums(W)
   ws <- W**(1/3)
@@ -105,6 +105,6 @@ UNC.transitivity.wu <- function(W){
   t <- sum(cyc3) / sum(K * (K-1))
   return(t)
 }
-transitivity.wu <- compiler::cmpfun(UNC.transitivity.wu)
+transitivity.wu <- compiler::cmpfun(transitivity.wu)
 
 

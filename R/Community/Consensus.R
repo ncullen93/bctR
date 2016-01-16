@@ -25,7 +25,7 @@
 #' @return D : a matrix - the agreement matrix
 #' 
 #' NOT TESTED
-UNC.agreement <- function(ci,
+agreement <- function(ci,
                           buffsz=NA){
   m <- dim(ci)[1]
   n <- dim(ci)[2]
@@ -52,7 +52,7 @@ UNC.agreement <- function(ci,
   diag(D) <- 0
   return(D)
 }
-agreement <- compiler::cmpfun(UNC.agreement)
+agreement <- compiler::cmpfun(agreement)
 
 
 
@@ -76,7 +76,7 @@ agreement <- compiler::cmpfun(UNC.agreement)
 #' @return D : a matrix - weighted agreement matrix
 #' 
 #' NOT TESTED
-UNC.agreement.weighted <- function(ci,
+agreement.weighted <- function(ci,
                                    wts){
   dim <- dim(ci)
   wts <- wts / sum(wts) # normalize
@@ -90,7 +90,7 @@ UNC.agreement.weighted <- function(ci,
   )
   return(D)
 }
-agreement.weighted <- compiler::cmpfun(UNC.agreement.weighted)
+agreement.weighted <- compiler::cmpfun(agreement.weighted)
 
 
 
@@ -128,7 +128,7 @@ agreement.weighted <- compiler::cmpfun(UNC.agreement.weighted)
 #' @return ciu : a vector - the consensus partition
 #' 
 #' NOT TESTED
-UNC.consensus.und <- function(D,
+consensus.und <- function(D,
                               tau,
                               reps=1000){
   
@@ -157,6 +157,6 @@ UNC.consensus.und <- function(D,
   }
   return() # np.squeeze(ciu+1) ??
 }
-consensus.und <- compiler::cmpfun(UNC.consensus.und)
+consensus.und <- compiler::cmpfun(consensus.und)
 
 

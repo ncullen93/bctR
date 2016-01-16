@@ -23,7 +23,7 @@
 #' @return C : a vector - clustering coefficient vector
 #' 
 #' NOT TESTED
-UNC.clustering.coef.bd <- function(A){
+clustering.coef.bd <- function(A){
   S <- A + t(A) # symmetrized input graph
   K <- colSums(W>0)
   cyc3 <- diag(S %*% (S %*% S)) / 2
@@ -32,7 +32,7 @@ UNC.clustering.coef.bd <- function(A){
   C <- cyc3 / CYC3
   return(C)
 }
-clustering.coef.bd <- compiler::cmpfun(UNC.clustering.coef.bd)
+clustering.coef.bd <- compiler::cmpfun(clustering.coef.bd)
 
 
 
@@ -47,7 +47,7 @@ clustering.coef.bd <- compiler::cmpfun(UNC.clustering.coef.bd)
 #' @return C : a vector - clustering coefficient vector
 #' 
 #' NOT TESTED
-UNC.clustering.coef.bu <- function(G){
+clustering.coef.bu <- function(G){
   n <- nrow(G)
   C <- rep(0,n)
   
@@ -60,7 +60,7 @@ UNC.clustering.coef.bu <- function(G){
     }
   }
 }
-clustering.coef.bu <- compiler::cmpfun(UNC.clustering.coef.bu)
+clustering.coef.bu <- compiler::cmpfun(clustering.coef.bu)
 
 
 
@@ -82,7 +82,7 @@ clustering.coef.bu <- compiler::cmpfun(UNC.clustering.coef.bu)
 #' @return C : a vector - clustering coefficient vector
 #' 
 #' NOT TESTED
-UNC.clustering.coef.wd <- function(W){
+clustering.coef.wd <- function(W){
   A <- binarize(W)
   S <- W**(1/3) + t(W)**(1/3)
   K <- colSums(W+t(W))
@@ -92,7 +92,7 @@ UNC.clustering.coef.wd <- function(W){
   C <- cyc3 / CYC3
   return(C)
 }
-clustering.coef.wd <- compiler::cmpfun(UNC.clustering.coef.wu)
+clustering.coef.wd <- compiler::cmpfun(clustering.coef.wu)
 
 
 
@@ -106,7 +106,7 @@ clustering.coef.wd <- compiler::cmpfun(UNC.clustering.coef.wu)
 #' @return C : a vector - clustering coefficient vector
 #' 
 #' NOT TESTED
-UNC.clustering.coef.wu <- function(W){
+clustering.coef.wu <- function(W){
   K <- colSums(W)
   ws <- W**(1/3)
   cyc3 <- diag(ws %*% (ws %*% ws))
@@ -114,5 +114,5 @@ UNC.clustering.coef.wu <- function(W){
   C <- cyc3 / (K * (K-1))
   return(C)
 }
-clustering.coef.wu <- compiler::cmpfun(UNC.clustering.coef.wu)
+clustering.coef.wu <- compiler::cmpfun(clustering.coef.wu)
 

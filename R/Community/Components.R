@@ -31,7 +31,7 @@
 #' to that component, and 'size' - the number of nodes in that component
 #' 
 #' NOT TESTED
-UNC.get.components <- function(A){
+get.components <- function(A){
   A <- binarize(A)
   n <- nrow(A)
   diag(A) <- 0
@@ -53,6 +53,6 @@ UNC.get.components <- function(A){
   
   return(list(comps,sapply(comps,length)))
 }
-get.components <- compiler::cmpfun(UNC.get.components)
+get.components <- compiler::cmpfun(get.components)
 
 

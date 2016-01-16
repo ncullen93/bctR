@@ -1,6 +1,7 @@
 
 # Code for Utility functions
 
+# Dont need this eventually
 sourcecpp <- function(){
   sourceCpp('/users/nick/desktop/bctR/src/cppUtility.cpp')
 }
@@ -19,7 +20,7 @@ sourcecpp <- function(){
 #' 
 #' @return W : Threshold Connectivity Matrix
 #' 
-UNC.threshold.proportional <- function(W, 
+threshold.proportional <- function(W, 
                                    p, 
                                    copy=F){
   stopifnot(p > 0, p <= 1)
@@ -44,7 +45,7 @@ UNC.threshold.proportional <- function(W,
   
   return(W)
 }
-threshold.proportional <- compiler::cmpfun(UNC.threshold.proportional)
+threshold.proportional <- compiler::cmpfun(threshold.proportional)
 
 #' Threshold Absolute
 #' 
@@ -58,14 +59,14 @@ threshold.proportional <- compiler::cmpfun(UNC.threshold.proportional)
 #' 
 #' @return W : Threshold Connectivity Matrix
 #' 
-UNC.threshold.absolute <- function(W,
+threshold.absolute <- function(W,
                                thr,
                                copy=F){
   diag(W) <- 0 # clear the diagonal, modifies in place
   W[W < thr] <- 0
   return(W)
 }
-threshold.absolute <- compiler::cmpfun(UNC.threshold.absolute)
+threshold.absolute <- compiler::cmpfun(threshold.absolute)
 
 #' Weight Conversion
 #' 
