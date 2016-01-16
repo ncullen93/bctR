@@ -18,7 +18,7 @@
 #' weights. If the network contains all positive weights, the
 #' output of the two functions will be equivalent.
 #' 
-#' Note: This algorithm is non-deterministic.
+#' Note: Function is not validated/running yet.
 #' 
 #' @param W : a Matrix - undirected weighted/binary connection
 #' matrix with positive and negative weights
@@ -57,16 +57,16 @@ modularity.louvain.und.sign <- function(W,
   
   h <- 1 # hierarchy index
   nh <- n # number of nodes in hierarcy
-  ci <- c(NA,1:(n+1)) # hierarchical module assignments
+  ci <- list(1:n) # hierarchical module assignments
   q <- c(-1,0) # hierarchical modularity values
   while (q[h] - q[h-1] > 1e-10){
     stopifnot(h < 300) # Modularity Infinite Loop Style A ??
     kn0 <- colSums(W0)
     kn1 <- colSums(W1)
-    km0 <- kn0 # copy
-    km1 <- kn1 # copy
-    knm0 <- W0 # copy
-    knm1 <- W1 # copy
+    km0 <- kn0
+    km1 <- kn1
+    knm0 <- W0
+    knm1 <- W1
     
     m <- 1:n # initial module assignments
     flag <- T
@@ -107,7 +107,6 @@ modularity.louvain.und.sign <- function(W,
     h <- h + 1
     ci <- c(ci,rep(0,n))
     m <- sapply(m,function(y) which(levels(as.factor(m))==y))
-    m <- m + 1 # maybe not necessary ?
     
     for (u in 1:nh){
       ci[h][which(c1[h-1] == u+1)] <- m[u]
@@ -119,8 +118,8 @@ modularity.louvain.und.sign <- function(W,
     
     for (u in 1:nh){
       for (v in u:nh){
-        wn0[u,v] <- sum(W0[...]) # np.sum(W0[np.ix_(m == u + 1, m == v + 1)])
-        wn1[u,v] <- sum(W1[...]) # np.sum(W1[np.ix_(m == u + 1, m == v + 1)])
+        wn0[u,v] <- sum(W0[m==u,m==v])
+        wn1[u,v] <- sum(W1[m==u,m==v])
         wn0[v,u] <- wn0[u,v]
         wn1[v,u] <- wn1[u,v]
       }
@@ -135,12 +134,41 @@ modularity.louvain.und.sign <- function(W,
     q[h] <- d0 * q0 - d1 * q1
     
     ci.ret <- sapply(ci[length(ci)],function(y) which(levels(as.factor(m))==y))
-    ci.ret <- ci.ret + 1
   }
   return(list(ci.ret,q[length(q)]))
 }
 
-
+#' Louvain Modularity Algorithm on Undirected Graph
+#' 
+#' The optimal community structure is a subdivision of the network into
+#' nonoverlapping groups of nodes in a way that maximizes the number of
+#' within-group edges, and minimizes the number of between-group edges.
+#' The modularity is a statistic that quantifies the degree to which the
+#' network may be subdivided into such clearly delineated groups.
+#'
+#' The Louvain algorithm is a fast and accurate community detection
+#' algorithm (as of writing). The algorithm may also be used to detect
+#' hierarchical community structure.
+#' 
+#' R Microbenchmark - Fast enough..
+#' Unit: milliseconds
+#' expr     min       lq    mean   median       uq      max neval
+#'  F     17.1479 18.74915 23.5213 21.61944 24.92701 175.7068   100
+#' 
+#' Note: Function is not validated yet.
+#' 
+#' @param W : a Matrix - undirected weighted/binary connection matrix
+#' @param gamma : a float - resolution parameter. default value=1. 
+#' Values 0 <= gamma < 1 detect larger modules while gamma > 1 
+#' detects smaller modules.
+#' @param hierarchy : a boolean - enables hier. output
+#' @param seed : an integer - random seed
+#' 
+#' @return ciQ : a list - two elements where element one is 'ci',
+#' a vector (refined community affiliation network), and element
+#' two is 'Q', a float (optimized modularity metric).If hierarchical 
+#' output enabled, becomes an Hx1 array of floats instead.
+#' 
 modularity.louvain.und <- function(W,
                                   gamma=1,
                                   hierarchy=FALSE,
@@ -149,37 +177,38 @@ modularity.louvain.und <- function(W,
   
   n <- nrow(W) # number of nodes
   s <- sum(W) # total edge weight
-  h <- 0 # hierarchy index
+  h <- 1 # hierarchy index
   ci <- list(1:n) # hierarchical module assignments
   q <- c(-1) # hierarhcical modularity values
   n0 <- n
   
   while (TRUE){
     stopifnot(h < 300) # infinite loop
-    
     k <- rowSums(W) # node degree
     Km <- k # module degree
     Knm <- W # node-to-module degree
-    
+
     m <- 1:n # initial module assignments
     flag <- TRUE
     it <- 0
+    # GOOD UP TO HERE
     while (flag){
+      #cat('Iteration: ' , it, '\n')
       it <- it + 1
       stopifnot(it < 1000) # infinite loop
       
       flag <- FALSE
-      
-      for (u in sample(n)){
+      for (i in sample(n)){
         ma <- m[i] # module assignment
         # algorithm condition
         dQ <- ((Knm[i,] - Knm[i,ma] + W[i,i]) -
                  gamma * k[i] * (Km - Km[ma] + k[i]) / s)
+        
         dQ[ma] <- 0 # change to itself is 0
         max.dQ <- max(dQ) # find maximum modularity increase
         
         if (max.dQ > 1e-10){
-          j <- which(dQ==max.dQ)
+          j <- which.max(dQ)
           
           Knm[,j] <- Knm[,j] + W[,i] # change node-to-module degrees
           Knm[,ma] <- Knm[,ma] - W[,i]
@@ -194,18 +223,42 @@ modularity.louvain.und <- function(W,
     }
     
     m <- sapply(m,function(y) which(levels(as.factor(m))==y)) # new module assignments
-    h <- h +1
+    h <- h + 1
+    new.m <- rep(NA,length(n))
     for (i in 1:n){
-      ci[[h]][which(ci[[h-1]] == i)] <- m[i]
+      new.m[which(ci[[h-1]] == i)] <- m[i]
     }
-    stopifnot(!is.na(sum(ci[[h]])))
+    ci[[h]] <- new.m
+    
     n <- max(m) # new number of modules
-    W1 <- Matrix(0,nrow=n,ncol=n) # new weighted matrix
+    W1 <- matrix(0,nrow=n,ncol=n) # new weighted matrix
     
+    for (i in 1:n){
+      for (j in i:n){
+        # pool weights of nodes in same module
+        wp <- sum(W[m==i,m==j])
+        W1[i,j] <- wp
+        W1[j,i] <- wp
+      }
+    }
     
+    W <- W1
+    
+    q <- c(q,0)
+    q[h] <- sum(diag(W)) / s - gamma * sum((W/s) %*% (W/s))
+    #cat("MODULARITY DIFFERENCE: ", q[h] - q[h-1], '\n')
+    if ( (q[h] - q[h-1]) < 1e-10 ) break
   }
   
-  
+  if (hierarchy){
+    ci <- ci[[2:(length(ci)-1)]]
+    q <- q[2:(length(q)-1)]
+    ciq <- list(ci=ci,q=q)
+  }
+  else{
+    ciq <- list(ci=ci[[h-1]],q=q[h-1])
+  }
+  return(ciq)
 }
 
 

@@ -3,6 +3,7 @@
 
 
 load.sample <- function(thres=1){
+  sample.data <- '/users/nick/desktop/bctr/data/sample.data.Rdata'
   return(threshold.proportional(get(load(sample.data)),
                                 thres))
 }
