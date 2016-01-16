@@ -15,6 +15,8 @@ breadth(CIJ, src)
 DB : a list - DB has two elements: 'distance' is a vector of
 distances between the source (src) and the ith vertex (0 for src),
 and 'branch' is a vector of vertices that precede 'i' in the BFS (-1 for src)
+
+#' @useDynLib bctR
 }
 \description{
 Implementation of Breadth-First Search in R (yikes!)

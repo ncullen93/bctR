@@ -23,7 +23,7 @@ double meanC(NumericVector x) {
   }
   return total / n;
 }
-
+ /*
 // [[Rcpp::export]]
 IntegerVector BFS_uw(NumericMatrix){
 
@@ -33,3 +33,5 @@ IntegerVector BFS_uw(NumericMatrix){
 IntegerVector BFS_uu(IntegerMatrix){
 
 }
+
+*/
