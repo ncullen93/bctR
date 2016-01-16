@@ -59,10 +59,12 @@ modularity.louvain.und.sign <- function(W,
   nh <- n # number of nodes in hierarcy
   ci <- list(1:n) # hierarchical module assignments
   q <- c(-1,0) # hierarchical modularity values
-  while (q[h] - q[h-1] > 1e-10){
+  q <- numeric(100)
+  while ( (q[h] - q[h-1]) > 1e-10 ){
     stopifnot(h < 300) # Modularity Infinite Loop Style A ??
     kn0 <- colSums(W0)
     kn1 <- colSums(W1)
+    # copying is expensive...
     km0 <- kn0
     km1 <- kn1
     knm0 <- W0
@@ -77,7 +79,7 @@ modularity.louvain.und.sign <- function(W,
       flag <- F
       # loop over nodes in random order
       for (u in sample(nh)){
-        ma <- m[u]+1
+        ma <- m[u]
         dQ0 <- ((knm0[u:length(knm0)] + W0[u,u] - knm0[u,ma]) - 
                   gamma * kn0[u] * (km0 + kn0[u] - km0[mal]) / s0) # positive dQ
         dQ1 <- ((knm1[u,length(knm1)] + W1[u,u] - knm1[u,ma]) -
@@ -86,7 +88,7 @@ modularity.louvain.und.sign <- function(W,
         dQ[ma] <- 0 # no changes for same module
         
         max.dQ <- max(dQ) # maximal increase in modularity
-        if (max.dQ > 1e-10){
+        if ( max.dQ > 1e-10 ){
           flag <- T
           mb <- which.max(dQ)
           # change postive node-to-module degrees
@@ -100,22 +102,21 @@ modularity.louvain.und.sign <- function(W,
           km1[mb] <- km1[mb] + kn1[u] # change negative module degrees
           km1[ma] <- km1[ma] - kn1[u]
           
-          m[u] <- mb + 1 # reassign module
+          m[u] <- mb # reassign module
         }
       }
     }
+    m <- as.factor(m)
+    m <- vapply(m,function(y) which(levels(m)==y),numeric(1)) # new module assignments
     h <- h + 1
-    ci <- c(ci,rep(0,n))
-    m <- sapply(m,function(y) which(levels(as.factor(m))==y))
     
-    for (u in 1:nh){
-      ci[h][which(c1[h-1] == u+1)] <- m[u]
-    }
+    ci[[h]] <- vapply(ci[[h-1]], function(x) m[x],numeric(1))[1:n]
     
     nh <- max(m) # number of new nodes
-    wn0 <- Matrix(0, nrow=nh, ncol=nh) # new positive weights matrix
+    wn0 <- matrix(nrow=nh, ncol=nh) # new positive weights matrix
     wn1 <- wn0 # copy
-    
+
+    # this is bad R code
     for (u in 1:nh){
       for (v in u:nh){
         wn0[u,v] <- sum(W0[m==u,m==v])
@@ -127,13 +128,14 @@ modularity.louvain.und.sign <- function(W,
     
     W0 <- wn0
     W1 <- wn1
-    q <- c(q,0)
+    #q <- c(q,0) # this is slow
+    q[h] <- 0
     # compute modularity
     q0 <- sum(diag(W0)) - sum(W0 %*% W0) / s0
     q1 <- sum(diag(W1)) - sum(W1 %*% W1) / s1
     q[h] <- d0 * q0 - d1 * q1
     
-    ci.ret <- sapply(ci[length(ci)],function(y) which(levels(as.factor(m))==y))
+    ci.ret <- vapply(ci[[length(ci)]],function(y) which(levels(as.factor(m))==y),numeric(1))
   }
   return(list(ci.ret,q[length(q)]))
 }
@@ -179,7 +181,9 @@ modularity.louvain.und <- function(W,
   s <- sum(W) # total edge weight
   h <- 1 # hierarchy index
   ci <- list(1:n) # hierarchical module assignments
-  q <- c(-1) # hierarhcical modularity values
+  q <- numeric(100)
+  q[1] <- -1
+  #q <- c(-1) # hierarhcical modularity values
   n0 <- n
   
   while (TRUE){
@@ -221,17 +225,14 @@ modularity.louvain.und <- function(W,
         }
       }
     }
-    
-    m <- sapply(m,function(y) which(levels(as.factor(m))==y)) # new module assignments
+    m <- as.factor(m)
+    m <- vapply(m,function(y) which(levels(m)==y),1) # new module assignments
     h <- h + 1
-    new.m <- rep(NA,length(n))
-    for (i in 1:n){
-      new.m[which(ci[[h-1]] == i)] <- m[i]
-    }
-    ci[[h]] <- new.m
+    
+    ci[[h]] <- vapply(ci[[h-1]], function(x) m[x],numeric(1))[1:n]
     
     n <- max(m) # new number of modules
-    W1 <- matrix(0,nrow=n,ncol=n) # new weighted matrix
+    W1 <- matrix(nrow=n,ncol=n) # new weighted matrix
     
     for (i in 1:n){
       for (j in i:n){
@@ -244,9 +245,7 @@ modularity.louvain.und <- function(W,
     
     W <- W1
     
-    q <- c(q,0)
     q[h] <- sum(diag(W)) / s - gamma * sum((W/s) %*% (W/s))
-    #cat("MODULARITY DIFFERENCE: ", q[h] - q[h-1], '\n')
     if ( (q[h] - q[h-1]) < 1e-10 ) break
   }
   

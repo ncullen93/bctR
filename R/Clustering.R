@@ -70,7 +70,7 @@ consensus.und <- function(D,
       ciu <- 1:n
     }
     else{
-      cis <- Matrix::Matrix(0, nrow=n, ncol=reps)
+      cis <- matrix(0, nrow=n, ncol=reps)
       for (i in 1:reps){
         cis[,i] <- modularity.louvain.und.sign(dt)
       }
