@@ -1,14 +1,24 @@
+// [[Rcpp::depends(RcppArmadillo)]]
 // [[Rcpp::depends(BH)]]
 
 #include <algorithm>
 #include <iostream>
 #include <vector>
 
-#include <Rcpp.h>
+//#include <Rcpp.h>
+#include <RcppArmadillo.h>
 #include <boost/math/common_factor.hpp> 
 #include <boost/numeric/ublas/matrix.hpp>
 
 using namespace Rcpp;
+
+
+
+// [[Rcpp::export]]
+arma::mat a1(arma::mat x) {
+  return(x);
+}
+
 
 // [[Rcpp::export]]
 int computeGCD(int a, int b) {
@@ -22,7 +32,7 @@ int computeLCM(int a, int b) {
 
 // [[Rcpp::export]]
 IntegerMatrix ijkalgorithm(IntegerMatrix A, 
-                                   IntegerMatrix B) {
+                           IntegerMatrix B) {
   int n = A.ncol();
   
   IntegerMatrix C(n);
@@ -38,17 +48,17 @@ IntegerMatrix ijkalgorithm(IntegerMatrix A,
 }
 
 /*
-Vector: (IntegerVector, NumericVector, LogicalVector, CharacterVector) 
-Scalar: (int, double, bool, String)
-Matrix: (IntegerMatrix, NumericMatrix, LogicalMatrix, CharacterMatrix) 
-RObject useAnRfunction(Function f) {}
-*/
+ Vector: (IntegerVector, NumericVector, LogicalVector, CharacterVector) 
+ Scalar: (int, double, bool, String)
+ Matrix: (IntegerMatrix, NumericMatrix, LogicalMatrix, CharacterMatrix) 
+ RObject useAnRfunction(Function f) {}
+ */
 
 // [[Rcpp::export]]
 double meanC(NumericVector x) {
   int n = x.size();
   double total = 0;
-
+  
   for(int i = 0; i < n; ++i) {
     total += x[i];
   }
