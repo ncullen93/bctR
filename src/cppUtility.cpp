@@ -12,10 +12,22 @@
 
 using namespace Rcpp;
 
+/*
+ RcppArmadillo Basics:
+ 
+ Matrix - arma::mat
+ 
+ */
+
+
 
 
 // [[Rcpp::export]]
 arma::mat a1(arma::mat x) {
+  x.t();
+  
+  
+  
   return(x);
 }
 
