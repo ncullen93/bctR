@@ -10,7 +10,7 @@ Depends:
 Suggests:
     Matrix,
     compiler
-LinkingTo: Rcpp
+LinkingTo: Rcpp, BH
 Imports: Rcpp
 VignetteBuilder: knitr
 License: GPL (>=2)

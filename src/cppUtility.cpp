@@ -1,10 +1,41 @@
+// [[Rcpp::depends(BH)]]
+
 #include <algorithm>
 #include <iostream>
 #include <vector>
 
 #include <Rcpp.h>
+#include <boost/math/common_factor.hpp> 
+#include <boost/numeric/ublas/matrix.hpp>
+
 using namespace Rcpp;
 
+// [[Rcpp::export]]
+int computeGCD(int a, int b) {
+  return boost::math::gcd(a, b);
+}
+
+// [[Rcpp::export]]
+int computeLCM(int a, int b) {
+  return boost::math::lcm(a, b);
+}
+
+// [[Rcpp::export]]
+IntegerMatrix ijkalgorithm(IntegerMatrix A, 
+                                   IntegerMatrix B) {
+  int n = A.ncol();
+  
+  IntegerMatrix C(n);
+  
+  for (int i = 0; i < n; i++) {
+    for (int k = 0; k < n; k++) {
+      for (int j = 0; j < n; j++) {
+        C(i,j) += A(i,k) * B(k,j);
+      }
+    }
+  }
+  return C;
+}
 
 /*
 Vector: (IntegerVector, NumericVector, LogicalVector, CharacterVector) 
@@ -23,15 +54,4 @@ double meanC(NumericVector x) {
   }
   return total / n;
 }
- /*
-// [[Rcpp::export]]
-IntegerVector BFS_uw(NumericMatrix){
 
-}
-
-// [[Rcpp::export]]
-IntegerVector BFS_uu(IntegerMatrix){
-
-}
-
-*/
